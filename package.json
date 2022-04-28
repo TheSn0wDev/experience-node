@@ -1,0 +1,30 @@
+{
+  "name": "experience-node",
+  "version": "1.0.0",
+  "description": "Node.js Resp API with Node.js, Express and MySQL",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sn00ww/experience-node.git"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mysql",
+    "restapi"
+  ],
+  "author": "MathieuBarral",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sn00ww/experience-node/issues"
+  },
+  "homepage": "https://github.com/Sn00ww/experience-node#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.0",
+    "mysql": "^2.18.1"
+  }
+}

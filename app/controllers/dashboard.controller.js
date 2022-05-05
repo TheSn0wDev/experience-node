@@ -1,6 +1,13 @@
 const Users = require("../models/dashboard.model.js");
+const bcrypt = require("bcrypt")
 
-exports.create = (req, res) => {
+async function hashPasswd (password) {
+    const salt = await bcrypt.genSalt(10);
+
+    return await bcrypt.hash(password, salt);
+};
+
+exports.create = async (req, res) => {
     if (!req.body) {
         res.status(400).send({
             message: "Content can not be empty!"
@@ -9,9 +16,8 @@ exports.create = (req, res) => {
     const user = new Users({
         username: req.body.username,
         email: req.body.email,
-        password: req.body.password
+        password: await hashPasswd(req.body.password)
     });
-    console.log(user);
 
     Users.create(user, (err, data) => {
         if (err)
@@ -23,45 +29,31 @@ exports.create = (req, res) => {
     });
 };
 
-exports.findById = (req, res) => {
-    Users.findById(req.params.id, (err, data) => {
-        if (err) {
-            if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: `Not found user with id ${req.params.id}.`
-                });
-            } else {
-                res.status(500).send({
-                    message: "Error retrieving user with id " + req.params.id
-                });
-            }
-        } else res.send(data);
+exports.getUser = async (req, res) => {
+    if (!req.query) {
+        res.status(400).send({
+            message: "Content can not be empty!"
+        });
+    }
+    const user = new Users({
+        email: req.query.email,
+        password: req.query.password
     });
-};
-
-exports.remove = (req, res) => {
-    Users.remove(req.params.id, (err, data) => {
-        if (err) {
-            if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: `Not found user with id ${req.params.id}.`
-                });
-            } else {
-                res.status(500).send({
-                    message: "Could not delete user with id " + req.params.id
-                });
-            }
-        } else res.send({ message: `User was deleted successfully!` });
-    });
-};
-
-exports.removeAll = (req, res) => {
-    Users.removeAll((err, data) => {
+    Users.getUser(user, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while removing all users."
+                    err.message || "Some error occurred while getting the user."
             });
-        else res.send({ message: `All users were deleted successfully!` });
+        else {
+            bcrypt.compare(req.query.password, JSON.parse(JSON.stringify(data))[0].password).then(function(result) {
+                if (result)
+                    res.send(data);
+                else
+                    res.status(500).send({
+                        message: "Wrong password"
+                    });
+            });
+        }
     });
 };

@@ -13,6 +13,19 @@ The goal of this project is to discover NodeJS by creating a simple API for a da
 
 I used NodeJS and Express following a tutorial to have a good file architecture.
 
+## Install
+
+```sh
+git clone https://github.com/Sn00ww/experience-node
+```
+
+## Usage
+
+```sh
+npm i
+node server.js
+```
+
 ## Author
 
 👤 **Sn0w**
